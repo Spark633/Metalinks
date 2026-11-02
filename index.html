@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="no-referrer">
+  <title>Meta Quest Referral Links</title>
+
+  <script>
+    // =====================================================================
+    //  SPIELE-LISTE  –  hier neue Spiele eintragen, eine Zeile pro Spiel:
+    //
+    //    ["Name", "Nummer aus dem Referral-Link", "Bild-URL"],
+    //
+    //  Die Nummer ist die lange Zahl im Link nach /appreferrals/Spark633/
+    //  Für PC-VR-Spiele (Rift) am Ende noch , "pc" anhängen.
+    //  Reihenfolge hier = Reihenfolge auf der Seite.
+    // =====================================================================
+    const SPIELE = [
+      ["Beat Saber",                         "2448060205267927", "https://i.imgur.com/a7ia3V7.png"],
+      ["Batman: Arkham Shadow",              "3551691271620960", "https://i.imgur.com/Yei1aOk.png"],
+      ["Metro Awakening",                    "5096918017089406", "https://i.imgur.com/otZO27a.png"],
+      ["Moss",                               "1654565391314903", "https://i.imgur.com/eXX0BEh.png"],
+      ["Moss 2",                             "4395292760584049", "https://i.imgur.com/ZRE9lc0.png"],
+      ["Virtual Desktop",                    "2017050365004772", "https://i.imgur.com/bRDKcOW.png"],
+      ["Down the Rabbit Hole",               "2476104599150595", "https://i.imgur.com/xuneJBU.png"],
+      ["Escaping Wonderland",                "6146292702126753", "https://i.imgur.com/2NTgpA4.png"],
+      ["Eleven Table Tennis",                "1995434190525828", "https://i.imgur.com/FB7Nsdw.png"],
+      ["Demeo",                              "3634830803298285", "https://i.imgur.com/rJ12zrI.png"],
+      ["The Walking Dead: Saints & Sinners", "2897337400373711", "https://i.imgur.com/ldY7UvJ.png"],
+      ["Red Matter",                         "2180753588712484", "https://i.imgur.com/pXJ81ue.png"],
+      ["The Room: A Dark Matter",            "2124523024270629", "https://i.imgur.com/1iXNjsM.png"],
+      ["The Room: A Dark Matter (Rift)",     "2009355295817444", "https://i.imgur.com/4KiTgRd.png", "pc"],
+      ["Real VR Fishing",                    "2582932495064035", "https://i.imgur.com/6B45QDc.png"],
+      ["Shadow Point",                       "2088119334554800", "https://i.imgur.com/c4cftRK.png"],
+      ["LEGO® Bricktales",                   "6521909757843713", "https://i.imgur.com/CScnh3S.png"],
+      ["House Flipper VR",                   "2540541942723653", "https://i.imgur.com/IOIK9ao.png"],
+      ["Ghost Giant",                        "2366136696841248", "https://i.imgur.com/XvKYJGt.png"],
+      ["Cookie Gardening",                   "5368758349867888", "https://i.imgur.com/UF4beum.png"],
+      ["Lovesick",                           "3587422908007953", "https://i.imgur.com/xdrxu6J.png"],
+      ["Robocracy",                          "6785194888229423", "https://i.imgur.com/RTfV4gc.png"],
+    ];
+    // ===================== Ende der Spiele-Liste =========================
+  </script>
+
+  <meta name="description" content="Meta Quest referral links: 15% off VR games like Beat Saber, Batman: Arkham Shadow, Moss and more – plus a bonus on a new Quest headset.">
+
+  <!-- Vorschau für Reddit, Discord, WhatsApp usw. -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://referral.spark633.de/">
+  <meta property="og:title" content="Meta Quest Referral Links – 15% off VR games">
+  <meta property="og:description" content="All my Meta Quest referral links in one place: 15% off games like Beat Saber, Batman: Arkham Shadow, Moss and more.">
+  <meta property="og:image" content="https://i.imgur.com/ckBouJs.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="https://i.imgur.com/KcnV83V.png">
+  <style>
+    :root{--bg:#f7f7f8;--card:#fff;--muted:#666;--accent:#0064e0}
+    body{font-family:Inter, Roboto, Arial, sans-serif;background:var(--bg);margin:0;padding:40px;color:#111}
+    h1{margin:0 0 12px;font-size:1.6rem}
+    .intro{margin-bottom:22px}
+    .intro p{margin:6px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(10,10,10,0.06);display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:inherit;transition:transform .15s, box-shadow .15s}
+    .card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(10,10,10,0.10)}
+    .card img{width:100%;height:180px;object-fit:cover;display:block;border-radius:8px}
+    .title{font-size:0.95rem;margin:16px 6px 6px;color:#111}
+    .note{font-size:0.8rem;color:var(--muted)}
+
+    /* Hervorgehobene Quest-Karte */
+    .hero{grid-column:1 / -1;flex-direction:row;gap:20px;text-align:left;border:2px solid var(--accent);margin-bottom:6px}
+    .hero img{width:280px;flex-shrink:0}
+    .hero .title{font-size:1.3rem;font-weight:700;margin:0 0 6px}
+    .hero .cta{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;border-radius:8px;padding:8px 14px;font-weight:600}
+
+    @media (max-width:600px){
+      .hero{flex-direction:column;text-align:center}
+      .hero img{width:100%}
+    }
+    @media (max-width:420px){body{padding:16px}.card img{height:140px}}
+  </style>
+</head>
+<body>
+
+  <!-- Standardtext Englisch (sehen auch Reddit & Co.), wird bei deutschem Browser umgeschaltet -->
+  <div class="intro">
+    <h1 data-en="Meta Quest Referral Links" data-de="Meta Quest Referral-Links">Meta Quest Referral Links</h1>
+    <p data-en="Click a game to open it in the Meta Store and get 15% off."
+       data-de="Klicke auf ein Spiel, um es im Meta-Store zu öffnen und 15% Rabatt zu bekommen.">
+      Click a game to open it in the Meta Store and get 15% off.</p>
+    <p data-en='&lt;b&gt;&lt;u&gt;We may need to be connected first:&lt;/u&gt;&lt;/b&gt; &lt;a href="https://horizon.meta.com/profile/109926180860502/?hwsh=6SyOU5BrL4" target="_blank" rel="noopener noreferrer"&gt;&lt;b&gt;click here for my profile&lt;/b&gt;&lt;/a&gt;'
+       data-de='&lt;b&gt;&lt;u&gt;Eventuell müssen wir zuerst connected sein,&lt;/u&gt;&lt;/b&gt; &lt;a href="https://horizon.meta.com/profile/109926180860502/?hwsh=6SyOU5BrL4" target="_blank" rel="noopener noreferrer"&gt;&lt;b&gt;klicke dafür hier!&lt;/b&gt;&lt;/a&gt;'>
+      <b><u>We may need to be connected first:</u></b>
+      <a href="https://horizon.meta.com/profile/109926180860502/?hwsh=6SyOU5BrL4" target="_blank" rel="noopener noreferrer"><b>click here for my profile</b></a></p>
+  </div>
+
+  <div class="grid" id="grid">
+
+    <a class="card hero" href="https://www.meta.com/referrals/link/Spark633/" target="_blank" rel="sponsored nofollow noopener noreferrer">
+      <img src="https://i.imgur.com/ckBouJs.png" alt="Meta Quest">
+      <div>
+        <div class="title" data-en="€30 with a new Quest" data-de="30€ bei neuer Quest">€30 with a new Quest</div>
+        <div class="note" data-en="Use before activation" data-de="Vor der Aktivierung nutzen">Use before activation</div>
+        <span class="cta" data-en="Get the headset link" data-de="Zum Headset-Link">Get the headset link</span>
+      </div>
+    </a>
+
+    <!-- Die Spiele-Karten werden automatisch aus der SPIELE-Liste oben erzeugt -->
+  </div>
+
+  <script>
+    const lang = (navigator.language || "en").substring(0, 2) === "de" ? "de" : "en";
+    const PC_HINWEIS = { en: "PC-VR", de: "PC-VR" };
+    const BASIS = "https://www.meta.com/appreferrals/Spark633/";
+    const UTM = "?utm_source=oculus&utm_location=2&utm_parent=frl&utm_medium=app_referral&utm_content=copy";
+
+    // Karten aus der Liste bauen
+    const grid = document.getElementById("grid");
+    SPIELE.forEach(([name, nummer, bild, extra]) => {
+      const a = document.createElement("a");
+      a.className = "card";
+      a.href = BASIS + nummer + UTM;
+      a.target = "_blank";
+      a.rel = "sponsored nofollow noopener noreferrer";
+
+      const img = document.createElement("img");
+      img.src = bild;
+      img.alt = name;
+      img.loading = "lazy";
+
+      const titel = document.createElement("div");
+      titel.className = "title";
+      titel.textContent = name;
+
+      a.append(img, titel);
+
+      if (extra === "pc") {
+        const hinweis = document.createElement("div");
+        hinweis.className = "note";
+        hinweis.textContent = PC_HINWEIS[lang];
+        a.append(hinweis);
+      }
+      grid.append(a);
+    });
+
+    // Feste Texte auf Deutsch umschalten
+    if (lang === "de") {
+      document.documentElement.lang = "de";
+      document.title = "Meta Quest Referral-Links";
+      document.querySelectorAll("[data-de]").forEach(el => { el.innerHTML = el.dataset.de; });
+    }
+  </script>
+</body>
+</html>
