@@ -77,7 +77,20 @@
       .hero{flex-direction:column;text-align:center}
       .hero img{width:100%}
     }
-    @media (max-width:420px){body{padding:16px}.card img{height:140px}}
+    /* Suchfeld */
+    body{position:relative}
+    .intro{padding-right:56px}
+    .suchbox{position:absolute;top:32px;right:32px;display:flex;align-items:center;background:#fff;border:1px solid #d4d4d8;border-radius:999px;box-shadow:0 4px 12px rgba(10,10,10,0.06);transition:border-color .2s}
+    .suchbox.offen{border-color:var(--accent)}
+    .lupe{width:42px;height:42px;border:0;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;padding:0;flex-shrink:0}
+    .lupe svg{width:20px;height:20px}
+    .search{width:0;padding:0;border:0;outline:none;background:none;font:inherit;font-size:1rem;transition:width .25s, padding .25s}
+    .suchbox.offen .search{width:min(220px, 55vw);padding:0 4px 0 16px}
+    .search::-webkit-search-cancel-button{cursor:pointer}
+    .empty{grid-column:1 / -1;color:var(--muted);text-align:center;padding:20px}
+    .hidden{display:none}
+
+    @media (max-width:420px){body{padding:16px}.card img{height:140px}.suchbox{top:12px;right:12px}}
   </style>
 </head>
 <body>
@@ -92,6 +105,13 @@
        data-de='&lt;b&gt;&lt;u&gt;Eventuell müssen wir zuerst connected sein,&lt;/u&gt;&lt;/b&gt; &lt;a href="https://horizon.meta.com/profile/109926180860502/?hwsh=6SyOU5BrL4" target="_blank" rel="noopener noreferrer"&gt;&lt;b&gt;klicke dafür hier!&lt;/b&gt;&lt;/a&gt;'>
       <b><u>We may need to be connected first:</u></b>
       <a href="https://horizon.meta.com/profile/109926180860502/?hwsh=6SyOU5BrL4" target="_blank" rel="noopener noreferrer"><b>click here for my profile</b></a></p>
+  </div>
+
+  <div class="suchbox" id="suchbox">
+    <input type="search" id="suche" class="search" placeholder="Search games…" aria-label="Search games" autocomplete="off">
+    <button class="lupe" id="lupe" type="button" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    </button>
   </div>
 
   <div class="grid" id="grid">
@@ -141,6 +161,43 @@
         a.append(hinweis);
       }
       grid.append(a);
+    });
+
+    // Suche: filtert die Spiele-Karten nach Namen
+    const suche = document.getElementById("suche");
+    const hero = grid.querySelector(".hero");
+    const spielKarten = [...grid.querySelectorAll(".card:not(.hero)")];
+    const leer = document.createElement("div");
+    leer.className = "empty hidden";
+    leer.textContent = lang === "de" ? "Kein Spiel gefunden." : "No game found.";
+    grid.append(leer);
+    if (lang === "de") { suche.placeholder = "Spiel suchen…"; suche.setAttribute("aria-label", "Spiel suchen"); }
+
+    // Lupe: klappt das Suchfeld auf und zu
+    const suchbox = document.getElementById("suchbox");
+    const lupe = document.getElementById("lupe");
+    if (lang === "de") lupe.setAttribute("aria-label", "Suche");
+    lupe.addEventListener("mousedown", e => e.preventDefault()); // verhindert, dass das Feld beim Klick erst zuklappt
+    lupe.addEventListener("click", () => {
+      const offen = suchbox.classList.toggle("offen");
+      if (offen) { suche.focus(); }
+      else { suche.value = ""; suche.dispatchEvent(new Event("input")); }
+    });
+    suche.addEventListener("keydown", e => {
+      if (e.key === "Escape") { suche.value = ""; suche.dispatchEvent(new Event("input")); suchbox.classList.remove("offen"); }
+    });
+    suche.addEventListener("blur", () => { if (!suche.value) suchbox.classList.remove("offen"); });
+
+    suche.addEventListener("input", () => {
+      const q = suche.value.trim().toLowerCase();
+      let treffer = 0;
+      spielKarten.forEach(karte => {
+        const passt = karte.querySelector(".title").textContent.toLowerCase().includes(q);
+        karte.classList.toggle("hidden", !passt);
+        if (passt) treffer++;
+      });
+      hero.classList.toggle("hidden", q !== "");   // Quest-Karte beim Suchen ausblenden
+      leer.classList.toggle("hidden", treffer > 0);
     });
 
     // Feste Texte auf Deutsch umschalten
